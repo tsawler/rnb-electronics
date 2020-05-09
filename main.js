@@ -190,6 +190,15 @@ function performSearch() {
 					'Unable to find ' + searchTerm,
 					'error'
 				);
+
+				const nbMiddleLatLon = [-66.2861827, 46.512442];
+				const nbMiddleMercator = ol.proj.fromLonLat(nbMiddleLatLon);
+
+				view.animate({
+					center: nbMiddleMercator,
+					zoom: 7,
+					duration: 500
+				});
 			}
 		});
 }
