@@ -156,7 +156,6 @@ function performSearch() {
 						+ '</strong><br>'
 						+ props.address
 						+ '</div>';
-					// console.log(props.desc);
 
 					popupOverlay.setPosition(undefined);
 					closer.blur();
@@ -168,7 +167,11 @@ function performSearch() {
 
 			let center = [data.lon, data.lat];
 			const centerCoords = ol.proj.fromLonLat(center);
-			view.setCenter(centerCoords);
-			view.setZoom(10);
+
+			view.animate({
+				center: centerCoords,
+				zoom: 11,
+				duration: 500
+			  });
 		});
 }
