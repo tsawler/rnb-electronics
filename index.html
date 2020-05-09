@@ -75,7 +75,7 @@
 <body>
 
   <div class="container-fluid">
-    <div class="row">
+    <div class="row pt-2">
       <div class="col-md-8" style="padding-left: 0;">
 
         <div id="js-map" class="map"></div>
@@ -87,13 +87,30 @@
       </div>
       <div class="col-md-4">
 
+        <div class="form-row align-items-center">
+          <div class="col-auto">
+            <label class="sr-only" for="location">City/Town</label>
+            <input type="text" class="form-control mb-2" id="location" placeholder="">
+          </div>
+
+
+          <div class="col-auto">
+            <a id="search-button" href="javascript:performSearch()" class="btn btn-primary mb-2">Find</a>
+          </div>
+        </div>
+
+        <div id="results">
+
+        </div>
+
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-4">
-        <input type="text" id="location" value="">
-        <button class="btn btn-primary" onclick="performSearch()">Search</button>
+      <div class="col-md-12">
+
+
+
       </div>
     </div>
   </div>
