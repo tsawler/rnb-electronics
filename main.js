@@ -116,7 +116,14 @@ function performSearch() {
 		searchButton.innerHTML = "Searching...";
 		searchField.setAttribute("disabled", "disabled");
 
-		fetch('https://' + window.location.hostname + '/electronics?city=' + searchTerm)
+		var dataURL;
+		if (window.location.protocol != 'https:') {
+			dataURL = window.location.protocol + '//' + window.location.hostname + ':8080/electronics?city=' + searchTerm;
+		} else {
+			dataURL = window.location.protocol + '//' + window.location.hostname + '/electronics?city=' + searchTerm;
+		}
+
+		fetch(dataURL)
 			.then(response => response.json())
 			.then(data => {
 
