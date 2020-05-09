@@ -36,6 +36,13 @@ function init() {
 	const nbMiddleLatLon = [-66.2861827, 46.512442];
 	const nbMiddleMercator = ol.proj.fromLonLat(nbMiddleLatLon);
 
+
+	var attribution = new ol.control.Attribution({
+		collapsible: true,
+		collapsed: true,
+	});
+
+
 	view = new ol.View({
 		center: nbMiddleMercator,
 		zoom: 7,
@@ -53,10 +60,11 @@ function init() {
 		],
 		target: 'js-map',
 		keyboardEventTarget: document,
-		controls: ol.control.defaults().extend([
+		controls: ol.control.defaults({attribution: false}).extend([
 			fullScreenControl,
 			zoomSliderControl,
 			zoomToExtentControl,
+			attribution,
 		])
 	})
 
@@ -104,74 +112,84 @@ function performSearch() {
 	fetch('http://' + window.location.hostname + ':8080/electronics?city=' + searchTerm)
 		.then(response => response.json())
 		.then(data => {
-			let locations = data.locations;
 
-			var iconFeatures = [];
+			if (data.ok) {
+				let locations = data.locations;
 
-			locations.forEach(function (item) {
-				// addMapMarker(map, item.lat, item.lng)
-				var iconFeature = new ol.Feature({
-					type: 'click',
-					desc: item.description,
-					name: item.store,
-					address: item.address,
-					geometry: new ol.geom.Point(ol.proj.transform([item.lng, item.lat], 'EPSG:4326', 'EPSG:3857')),
+				var iconFeatures = [];
+
+				locations.forEach(function (item) {
+					// addMapMarker(map, item.lat, item.lng)
+					var iconFeature = new ol.Feature({
+						type: 'click',
+						desc: item.description,
+						name: item.store,
+						address: item.address,
+						geometry: new ol.geom.Point(ol.proj.transform([item.lng, item.lat], 'EPSG:4326', 'EPSG:3857')),
+					});
+					iconFeatures.push(iconFeature);
 				});
-				iconFeatures.push(iconFeature);
-			});
 
-			var vectorSource = new ol.source.Vector({
-				features: iconFeatures
-			});
-
-			var iconStyle = new ol.style.Style({
-				image: new ol.style.Icon({
-					anchor: [0.5, 0.5],
-					anchorXUnits: 'fraction',
-					anchorYUnits: 'fraction',
-					src: "img/pin.svg"
-				})
-			});
-
-			var vectorLayer = new ol.layer.Vector({
-				source: vectorSource,
-				style: iconStyle,
-				updateWhileAnimating: true,
-				updateWhileInteracting: true,
-			});
-
-			map.addLayer(vectorLayer);
-
-			map.on('singleclick', function(evt) {
-				var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-					return feature;
+				var vectorSource = new ol.source.Vector({
+					features: iconFeatures
 				});
-		
-				if (feature) {
-					var coordinate = feature.getGeometry().getCoordinates();
-					var props = feature.getProperties();
-					var info = '<div style="width:220px; margin-top:3px">' 
-						+ '<strong>'
-						+ props.name 
-						+ '</strong><br>'
-						+ props.address
-						+ '</div>';
 
-					popupOverlay.setPosition(undefined);
-					closer.blur();
+				var iconStyle = new ol.style.Style({
+					image: new ol.style.Icon({
+						anchor: [0.5, 0.5],
+						anchorXUnits: 'fraction',
+						anchorYUnits: 'fraction',
+						src: "img/pin.svg"
+					})
+				});
 
-					content.innerHTML = info;
-					popupOverlay.setPosition(coordinate);
-				}
-			});
+				var vectorLayer = new ol.layer.Vector({
+					source: vectorSource,
+					style: iconStyle,
+					updateWhileAnimating: true,
+					updateWhileInteracting: true,
+				});
 
-			let center = [data.lon, data.lat];
-			const centerCoords = ol.proj.fromLonLat(center);
+				map.addLayer(vectorLayer);
 
-			view.animate({
-				center: centerCoords,
-				zoom: 11,
-				duration: 500
-			  });
+				map.on('singleclick', function (evt) {
+					var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+						return feature;
+					});
+
+					if (feature) {
+						var coordinate = feature.getGeometry().getCoordinates();
+						var props = feature.getProperties();
+						var info = '<div style="width:220px; margin-top:3px">'
+							+ '<strong>'
+							+ props.name
+							+ '</strong><br>'
+							+ props.address
+							+ '</div>';
+
+						popupOverlay.setPosition(undefined);
+						closer.blur();
+
+						content.innerHTML = info;
+						popupOverlay.setPosition(coordinate);
+					}
+				});
+
+				let center = [data.lon, data.lat];
+				const centerCoords = ol.proj.fromLonLat(center);
+
+				view.animate({
+					center: centerCoords,
+					zoom: 11,
+					duration: 500
+				});
+			} else {
+				// Swal.fire('Unable to find location!')
+				Swal.fire(
+					'',
+					'Unable to find ' + searchTerm,
+					'error'
+				);
+			}
 		});
 }
