@@ -116,7 +116,7 @@ function performSearch() {
 		searchButton.innerHTML = "Searching...";
 		searchField.setAttribute("disabled", "disabled");
 
-		fetch('http://' + window.location.hostname + ':8080/electronics?city=' + searchTerm)
+		fetch('https://' + window.location.hostname + '/electronics?city=' + searchTerm)
 			.then(response => response.json())
 			.then(data => {
 
