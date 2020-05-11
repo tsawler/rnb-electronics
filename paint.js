@@ -104,9 +104,9 @@ function performSearch() {
 
         var dataURL;
         if (window.location.protocol != 'https:') {
-            dataURL = window.location.protocol + '//' + window.location.hostname + ':8080/electronics?city=' + searchTerm;
+            dataURL = window.location.protocol + '//' + window.location.hostname + ':8080/paint?city=' + searchTerm;
         } else {
-            dataURL = window.location.protocol + '//' + window.location.hostname + '/electronics?city=' + searchTerm;
+            dataURL = window.location.protocol + '//' + window.location.hostname + '/paint?city=' + searchTerm;
         }
 
         fetch(dataURL)

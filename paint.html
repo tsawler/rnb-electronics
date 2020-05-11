@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css"
+    integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous" />
+
+  <link href="./libs/ol.css" rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
+
+
+
+  <title>Open Layers</title>
+  <style>
+    .highlighted {
+      background: lightyellow;
+      width: 100%;
+      padding: 5px;
+    }
+    .ol-popup {
+      font-family: 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif !important;
+      font-size: 12px;
+      position: absolute;
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #cccccc;
+      bottom: 12px;
+      left: -50px;
+      min-width: 200px;
+    }
+
+    .ol-popup:after,
+    .ol-popup:before {
+      top: 100%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .ol-popup:after {
+      border-top-color: white;
+      border-width: 10px;
+      left: 48px;
+      margin-left: -10px;
+    }
+
+    .ol-popup:before {
+      border-top-color: #cccccc;
+      border-width: 11px;
+      left: 48px;
+      margin-left: -11px;
+    }
+
+    .ol-popup-closer {
+      text-decoration: none;
+      position: absolute;
+      top: 2px;
+      right: 8px;
+    }
+
+    .ol-popup-closer:after {
+      content: "✖";
+      color: #c3c3c3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <div class="row pt-2">
+      <div class="col-md-8" style="padding-left: 0;">
+
+        <div id="js-map" class="map"></div>
+
+        <div id="popup" class="ol-popup">
+          <a href="javascript:" id="popup-closer" class="ol-popup-closer"></a>
+          <div id="popup-content"></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+
+        <div class="form-row align-items-center">
+          <div class="col-auto">
+            <label class="sr-only" for="location">City/Town</label>
+            <input type="text" class="form-control mb-2" id="location" placeholder="">
+          </div>
+
+
+          <div class="col-auto">
+            <a id="search-button" href="javascript:performSearch()" class="btn btn-primary mb-2">Find</a>
+          </div>
+        </div>
+
+        <div id="results">
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+
+
+
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.js"
+    integrity="sha256-7OUNnq6tbF4510dkZHCRccvQfRlV3lPpBTJEljINxao=" crossorigin="anonymous"></script>
+
+  <script src="./libs/ol.js"></script>
+  <script src="./main.js"></script>
+
+
+
+</body>
+
+</html>
