@@ -126,6 +126,8 @@ function performSearch() {
                             type: 'click',
                             itemId: count,
                             desc: item.description,
+                            phone: item.phone,
+                            city: item.city,
                             name: item.store,
                             address: item.address,
                             geometry: new ol.geom.Point(ol.proj.transform([item.lng, item.lat], 'EPSG:4326', 'EPSG:3857')),
@@ -137,9 +139,10 @@ function performSearch() {
 							<strong>
 							${item.store}
 							</strong><br>
-                            ${item.address}
+                            ${item.address}, ${item.city}
                             <br>
-                            ${item.products}
+                            ${item.phone}<br>
+                            <strong>Products accepted:</strong> ${item.products}
                             </div>
                             <hr>
                         `;
