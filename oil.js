@@ -127,7 +127,7 @@ function performSearch() {
                         // addMapMarker(map, item.lat, item.lng)
                         var iconFeature = new ol.Feature({
                             type: 'click',
-                            itemId: item.id,
+                            itemId: item.myID,
                             desc: item.description,
                             name: item.store,
                             address: item.address,
@@ -136,7 +136,7 @@ function performSearch() {
                         iconFeatures.push(iconFeature);
 
                         var current = `
-                        <div id="place-${item.id}" class="depot" style="width:100%; padding: 1em; margin-top:3px">
+                        <div id="place-${item.myID}" class="depot" style="width:100%; padding: 1em; margin-top:3px">
 							<strong>
 							${item.store}
 							</strong><br>
