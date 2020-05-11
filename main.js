@@ -6,230 +6,230 @@ const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
 
 document.addEventListener("DOMContentLoaded", function (event) {
-	init();
-	document.getElementById("location").addEventListener('change', function () {
-		performSearch();
-	})
+    init();
+    document.getElementById("location").addEventListener('change', function () {
+        performSearch();
+    })
 })
 
 closer.onclick = function () {
-	popupOverlay.setPosition(undefined);
-	closer.blur();
-	return false;
+    popupOverlay.setPosition(undefined);
+    closer.blur();
+    return false;
 };
 
 const popupOverlay = new ol.Overlay({
-	element: container,
-	autoPan: true,
-	autoPanAnimation: {
-		duration: 250
-	}
+    element: container,
+    autoPan: true,
+    autoPanAnimation: {
+        duration: 250
+    }
 });
 
 function init() {
 
-	// Controls
-	const fullScreenControl = new ol.control.FullScreen();
-	const zoomSliderControl = new ol.control.ZoomSlider();
-	const zoomToExtentControl = new ol.control.ZoomToExtent();
+    // Controls
+    const fullScreenControl = new ol.control.FullScreen();
+    const zoomSliderControl = new ol.control.ZoomSlider();
+    const zoomToExtentControl = new ol.control.ZoomToExtent();
 
-	const nbMiddleLatLon = [-66.2861827, 46.512442];
-	const nbMiddleMercator = ol.proj.fromLonLat(nbMiddleLatLon);
-
-
-	var attribution = new ol.control.Attribution({
-		collapsible: true,
-		collapsed: true,
-	});
+    const nbMiddleLatLon = [-66.2861827, 46.512442];
+    const nbMiddleMercator = ol.proj.fromLonLat(nbMiddleLatLon);
 
 
-	view = new ol.View({
-		center: nbMiddleMercator,
-		zoom: 7,
-		maxZoom: 20,
-		minZoom: 2,
-	})
+    var attribution = new ol.control.Attribution({
+        collapsible: true,
+        collapsed: true,
+    });
 
-	map = new ol.Map({
-		view: view,
-		layers: [
-			new ol.layer.Tile({
-				source: new ol.source.OSM(),
-				zIndex: 0,
-			})
-		],
-		target: 'js-map',
-		keyboardEventTarget: document,
-		controls: ol.control.defaults({ attribution: false }).extend([
-			fullScreenControl,
-			zoomSliderControl,
-			zoomToExtentControl,
-			attribution,
-		])
-	})
 
-	//addMapMarker(map, 45.99639632131496, -66.76388278666946)
 
-	map.addOverlay(popupOverlay);
+    view = new ol.View({
+        center: nbMiddleMercator,
+        zoom: 8,
+        maxZoom: 20,
+        minZoom: 2,
 
-	map.on("pointermove", function (evt) {
-		var hit = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-			return true;
-		});
-		if (hit) {
-			this.getTargetElement().style.cursor = 'pointer';
-		} else {
-			this.getTargetElement().style.cursor = '';
-		}
-	});
+    })
+
+    map = new ol.Map({
+        view: view,
+        layers: [
+            new ol.layer.Tile({
+                // source: new ol.source.OSM(),
+                source: new ol.source.OSM({
+                    "url" : "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=dd6b966415ce4872aa1329683b1ed785"
+                }),
+                // source: new ol.source.OSM({
+                //     "url": "https://api.openrouteservice.org/mapsurfer/0/0/0.png?api_key=5b3ce3597851110001cf624817e531e23fb94f6197f3c72cd66d8189",
+                // }),
+			// 	zIndex: 0,
+            })
+        ],
+        target: 'js-map',
+        keyboardEventTarget: document,
+        controls: ol.control.defaults({ attribution: false }).extend([
+            fullScreenControl,
+            zoomSliderControl,
+            zoomToExtentControl,
+            attribution,
+        ])
+    })
+
+
+    map.addOverlay(popupOverlay);
+
+    map.on("pointermove", function (evt) {
+        var hit = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+            return true;
+        });
+        if (hit) {
+            this.getTargetElement().style.cursor = 'pointer';
+        } else {
+            this.getTargetElement().style.cursor = '';
+        }
+    });
 
 }
-
-function addMapMarker(m, lat, lng) {
-	var vectorLayer = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [new ol.Feature({
-				geometry: new ol.geom.Point(ol.proj.transform([parseFloat(lng), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')),
-			})]
-		}),
-		style: new ol.style.Style({
-			image: new ol.style.Icon({
-				anchor: [0.5, 0.5],
-				anchorXUnits: "fraction",
-				anchorYUnits: "fraction",
-				src: "img/pin.svg"
-			})
-		})
-	});
-
-	m.addLayer(vectorLayer);
-}
-
 
 function performSearch() {
-	let searchField = document.getElementById("location");
-	let searchTerm = searchField.value;
-	let searchButton = document.getElementById("search-button");
+    let searchField = document.getElementById("location");
+    let searchTerm = searchField.value;
+    let searchButton = document.getElementById("search-button");
 
-	if (searchTerm !== "") {
+    if (searchTerm !== "") {
 
-		searchButton.innerHTML = "Searching...";
-		searchField.setAttribute("disabled", "disabled");
+        searchButton.innerHTML = "Searching...";
+        searchField.setAttribute("disabled", "disabled");
 
-		var dataURL;
-		if (window.location.protocol != 'https:') {
-			dataURL = window.location.protocol + '//' + window.location.hostname + ':8080/electronics?city=' + searchTerm;
-		} else {
-			dataURL = window.location.protocol + '//' + window.location.hostname + '/electronics?city=' + searchTerm;
-		}
+        var dataURL;
+        if (window.location.protocol != 'https:') {
+            dataURL = window.location.protocol + '//' + window.location.hostname + ':8080/electronics?city=' + searchTerm;
+        } else {
+            dataURL = window.location.protocol + '//' + window.location.hostname + '/electronics?city=' + searchTerm;
+        }
 
-		fetch(dataURL)
-			.then(response => response.json())
-			.then(data => {
+        fetch(dataURL)
+            .then(response => response.json())
+            .then(data => {
 
-				if (data.ok) {
-					let locations = data.locations;
+                document.getElementById("results").innerHTML = "";
 
-					var iconFeatures = [];
+                if (data.ok) {
+                    console.log("Data is okay");
+                    let depotList = "";
 
-					locations.forEach(function (item) {
-						// addMapMarker(map, item.lat, item.lng)
-						var iconFeature = new ol.Feature({
-							type: 'click',
-							desc: item.description,
-							name: item.store,
-							address: item.address,
-							geometry: new ol.geom.Point(ol.proj.transform([item.lng, item.lat], 'EPSG:4326', 'EPSG:3857')),
-						});
-						iconFeatures.push(iconFeature);
-					});
+                    let locations = data.locations;
 
-					var vectorSource = new ol.source.Vector({
-						features: iconFeatures
-					});
+                    var iconFeatures = [];
 
-					var iconStyle = new ol.style.Style({
-						image: new ol.style.Icon({
-							anchor: [0.5, 0.5],
-							anchorXUnits: 'fraction',
-							anchorYUnits: 'fraction',
-							src: "img/pin.svg"
-						})
-					});
+                    locations.forEach(function (item) {
+                        // addMapMarker(map, item.lat, item.lng)
+                        var iconFeature = new ol.Feature({
+                            type: 'click',
+                            itemId: item.id,
+                            desc: item.description,
+                            name: item.store,
+                            address: item.address,
+                            geometry: new ol.geom.Point(ol.proj.transform([item.lng, item.lat], 'EPSG:4326', 'EPSG:3857')),
+                        });
+                        iconFeatures.push(iconFeature);
 
-					var vectorLayer = new ol.layer.Vector({
-						source: vectorSource,
-						style: iconStyle,
-						updateWhileAnimating: true,
-						updateWhileInteracting: true,
-					});
+                        var current = `
+                        <div id="place-${item.id}" class="depot" style="width:100%; padding: 1em; margin-top:3px">
+							<strong>
+							${item.store}
+							</strong><br>
+                            ${item.address}
+                            <br>
+                            ${item.products}
+                            </div>
+                            <hr>
+                        `;
+                        depotList = depotList + current;
+                    });
 
-					map.addLayer(vectorLayer);
+                    document.getElementById("results").innerHTML = depotList;
 
-					map.on('singleclick', function (evt) {
-						var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-							return feature;
-						});
+                    var vectorSource = new ol.source.Vector({
+                        features: iconFeatures
+                    });
 
-						if (feature) {
-							var coordinate = feature.getGeometry().getCoordinates();
-							var props = feature.getProperties();
-							var info = '<div style="width:220px; margin-top:3px">'
-								+ '<strong>'
-								+ props.name
-								+ '</strong><br>'
-								+ props.address
-								+ '</div>';
+                    var iconStyle = new ol.style.Style({
+                        image: new ol.style.Icon({
+                            anchor: [0.5, 0.5],
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'fraction',
+                            src: "img/pin.svg"
+                        })
+                    });
 
-							popupOverlay.setPosition(undefined);
-							closer.blur();
+                    var vectorLayer = new ol.layer.Vector({
+                        source: vectorSource,
+                        style: iconStyle,
+                        updateWhileAnimating: true,
+                        updateWhileInteracting: true,
+                    });
 
-							let preview = `
-								<p>
-									<hr>
-									<strong> ${props.name}</strong><br>
-									<hr>
-									${props.address}<br>
-									${props.desc}
-								</p>`
+                    map.addLayer(vectorLayer);
 
-							document.getElementById("results").innerHTML = preview;
+                    map.on('singleclick', function (evt) {
+                        var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+                            return feature;
+                        });
 
-							content.innerHTML = info;
-							popupOverlay.setPosition(coordinate);
-						}
-					});
+                        if (feature) {
+                            var coordinate = feature.getGeometry().getCoordinates();
+                            var props = feature.getProperties();
+                            var info = '<div style="width:220px; margin-top:3px">'
+                                + '<strong>'
+                                + props.name
+                                + '</strong><br>'
+                                + props.address
+                                + '</div>';
 
-					let center = [data.lon, data.lat];
-					const centerCoords = ol.proj.fromLonLat(center);
+                            popupOverlay.setPosition(undefined);
+                            closer.blur();
+                            let depots = document.getElementsByClassName("depot");
+                            for (let i = 0; i < depots.length; i++) {
+                                depots[i].classList.remove("highlighted");
+                            }
+                            document.getElementById("place-" + props.itemId).classList.add("highlighted");
 
-					view.animate({
-						center: centerCoords,
-						zoom: 11,
-						duration: 500
-					});
-					searchButton.innerHTML = "Find";
-					searchField.removeAttribute("disabled");
+                            content.innerHTML = info;
+                            popupOverlay.setPosition(coordinate);
+                        }
+                    });
 
-				} else {
-					// Swal.fire('Unable to find location!')
-					Swal.fire(
-						'',
-						'Unable to find ' + searchTerm,
-						'error'
-					);
+                    let center = [data.lon, data.lat];
+                    const centerCoords = ol.proj.fromLonLat(center);
 
-					const nbMiddleLatLon = [-66.2861827, 46.512442];
-					const nbMiddleMercator = ol.proj.fromLonLat(nbMiddleLatLon);
-					searchButton.innerHTML = "Find";
-					searchField.removeAttribute("disabled");
+                    view.animate({
+                        center: centerCoords,
+                        zoom: 12,
+                        duration: 500
+                    });
+                    searchButton.innerHTML = "Find";
+                    searchField.removeAttribute("disabled");
 
-					view.animate({
-						center: nbMiddleMercator,
-						zoom: 7,
-						duration: 500
-					});
-				}
-			});
-	}
+                } else {
+                    Swal.fire(
+                        '',
+                        'Unable to find ' + searchTerm,
+                        'error'
+                    );
+
+                    const nbMiddleLatLon = [-66.2861827, 46.512442];
+                    const nbMiddleMercator = ol.proj.fromLonLat(nbMiddleLatLon);
+                    searchButton.innerHTML = "Find";
+                    searchField.removeAttribute("disabled");
+
+                    view.animate({
+                        center: nbMiddleMercator,
+                        zoom: 7,
+                        duration: 500
+                    });
+                }
+            });
+    }
 }
