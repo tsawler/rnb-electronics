@@ -60,10 +60,6 @@ function init() {
                 source: new ol.source.OSM({
                     "url" : "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=dd6b966415ce4872aa1329683b1ed785"
                 }),
-                // source: new ol.source.OSM({
-                //     "url": "https://api.openrouteservice.org/mapsurfer/0/0/0.png?api_key=5b3ce3597851110001cf624817e531e23fb94f6197f3c72cd66d8189",
-                // }),
-			// 	zIndex: 0,
             })
         ],
         target: 'js-map',
