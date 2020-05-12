@@ -1,0 +1,34 @@
+version: '3.1'
+
+services:
+    caddy:
+        image: caddy:2.0.0-alpine
+        ports:
+          - 5000:80
+        volumes:
+          - /Users/tcs/WebStormProjects/rnb-depots/Caddyfile:/etc/Caddyfile
+          - /Users/tcs/WebStormProjects/rnb-depots:/usr/share/caddy
+          - /Users/tcs/WebStormProjects/rnb-depots/data:/data
+
+    db:
+        image: mariadb:10.4.12
+        ports:
+          - 33060:3306
+        environment:
+          - MYSQL_ROOT_PASSWORD=secret
+        volumes:
+          - /Users/tcs/WebStormProjects/rnb-depots/db:/var/lib/mysql
+
+    places:
+        image: tsawler/rnb-data:1.0.0
+        ports:
+          - 8080:8080
+        depends_on:
+          - db
+        environment:
+          WIT_HOSTS_TIMEOUT: 60
+          WAIT_HOSTS: db:3306
+          DB_HOST: db
+
+
+

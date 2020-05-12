@@ -1,0 +1,6 @@
+* {
+    file_server * {
+        root /usr/share/caddy
+        index index.html
+    }
+}
