@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.7'
 
 services:
     caddy:
@@ -20,13 +20,13 @@ services:
           - /Users/tcs/WebStormProjects/rnb-depots/db:/var/lib/mysql
 
     places:
-        image: tsawler/rnb-data:1.0.0
+        image: tsawler/rnb-data:1.0.1
         ports:
           - 8080:8080
         depends_on:
           - db
         environment:
-          WIT_HOSTS_TIMEOUT: 60
+          WAIT_HOSTS_TIMEOUT: 60
           WAIT_HOSTS: db:3306
           DB_HOST: db
 
