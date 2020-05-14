@@ -4,12 +4,11 @@ let view;
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
-const baseMap = new ol.layer.Tile({
-                // source: new ol.source.OSM(),
-                source: new ol.source.OSM({
-                    "url" : "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=dd6b966415ce4872aa1329683b1ed785"
-                }),
-            })
+const baseLayer = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+      url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoidHNhd2xlciIsImEiOiJja2E2dXV2OTIwZDRoMnZtbmIzaWN3MTUzIn0.ZsPf1wVUQskg_SfD6pXh1Q'
+    })
+})
 
 document.addEventListener("DOMContentLoaded", function (event) {
     init();
@@ -61,7 +60,7 @@ function init() {
     map = new ol.Map({
         view: view,
         layers: [
-            baseMap,
+            baseLayer,
         ],
         target: 'js-map',
         keyboardEventTarget: document,
@@ -167,7 +166,7 @@ function performSearch() {
                     // remove existng layers from previous search, if any
                     const layers = [...map.getLayers().getArray()]
                     layers.forEach((layer) => {
-                        if (layer !== baseMap) {
+                        if (layer !== baseLayer) {
                             map.removeLayer(layer);
                         }
                     });
