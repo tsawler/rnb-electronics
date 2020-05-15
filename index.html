@@ -15,9 +15,10 @@
 <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' /> -->
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous" /> -->
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" /> -->
+<link href="./ts/bootstrap4/tail.select-default.min.css" rel="stylesheet">
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css"> -->
 
   <link href="./libs/ol.css" rel="stylesheet">
   <link href="./styles.css" rel="stylesheet">
@@ -101,7 +102,12 @@
         <div class="form-row align-items-center">
           <div class="col-auto">
             <label class="sr-only" for="location">City/Town</label>
-            <input type="text" class="form-control mb-2" id="location" placeholder="">
+            <!-- <input type="text" class="form-control mb-2" id="location" placeholder=""> -->
+            <select class="form-control" id="location"  style="width: 100%;">
+              <option value="fredericton">Frederiction</option>
+              <option value="moncton">Moncton</option>
+              <option value="saint john">Saint John</option>
+            </select>
             <!-- <select class="form-control" multiple="" style="width: 200px;" data-placeholder="" aria-hidden="true"  name="location" id="location"></select> -->
           </div>
 
@@ -140,89 +146,26 @@
   <script src="./main.js"></script>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script> -->
 
+  <script src="./ts/tail.select.min.js"></script>
 
-
-  <!-- <script>
-    $( document ).ready(function() {
-      $('#location').select2({
-        minimumInputLength: 2,
-          tags: [],
-        ajax: {
-          
-          url: 'http://localhost:8080/places',
-          delay: 250,
-          dataType: 'json',
-          data: function (params) {
-                var query = {
-                    //trim the extra whitespace
-                    search: params.term.replace(/\s+/g, " ").trim(),
-                }
-
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-
-          processResults: function (data) {
-            // Transforms the top-level key of the response object from 'items' to 'results'
-            return {
-              results: data.results
-            };
-          }
-        }
-      });
-    })
-  </script> -->
-<!-- 
   <script>
-    $(document).ready(function(){
-    $('#location').select2({
-        minimumInputLength: 2,
-        tags: [],
-        ajax: {
-            url: 'http://localhost:8080/places',
-            dataType: 'json',
-            data: function (params) {
-                var query = {
-                    //trim the extra whitespace
-                    search: params.term.replace(/\s+/g, " ").trim(),
-                }
+    let locationSearch = document.getElementById("location");
+    tail.select(locationSearch, {search: true, width: '100%'});
 
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-            processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.results
-                };
-            }
-        }
-    });
-});
-  </script> -->
-  <script>
-
-    document.addEventListener("DOMContentLoaded", function(event) {
-      new autoComplete({
-        selector: "#location",
-        data: {                              // Data src [Array, Function, Async] | (REQUIRED)
-          src: async () => {
-            // User search query
-            const query = document.querySelector("#location").value;
-            // Fetch External Data Source
-            const source = await fetch(`http://localhost:8080/places?search=${query}`);
-            const data = await source.json();
-            // Return Fetched data
-            return data.results;
-          },
-          key: ["id"],
-          cache: false
-          },
-        })
-    })
-
+    // var select = tail.select(locationSearch, {
+    // items: {
+    //     key1: "value1",         // Just a Key -> innerText Pair
+    //     key2: {                 // Complete Option Structure
+    //         value: "value2",
+    //         group: "#",         // The optgroup, the default is "#"
+    //         selected: false,    // Pre-Select Item
+    //         disabled: false,    // Pre-Disable Item
+    //         description: ""     // Custom Option Description
+    //     }
+    // }
+// });
   </script>
 
 
