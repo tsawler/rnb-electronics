@@ -13,6 +13,11 @@
 
     <!-- <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' /> -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous" /> -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" /> -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
 
   <link href="./libs/ol.css" rel="stylesheet">
   <link href="./styles.css" rel="stylesheet">
@@ -97,6 +102,7 @@
           <div class="col-auto">
             <label class="sr-only" for="location">City/Town</label>
             <input type="text" class="form-control mb-2" id="location" placeholder="">
+            <!-- <select class="form-control" multiple="" style="width: 200px;" data-placeholder="" aria-hidden="true"  name="location" id="location"></select> -->
           </div>
 
 
@@ -120,10 +126,104 @@
       </div>
     </div>
   </div>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.full.min.js" integrity="sha256-vucLmrjdfi9YwjGY/3CQ7HnccFSS/XRS1M/3k/FDXJw=" crossorigin="anonymous"></script> -->
+
+<!-- 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script> -->
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.js"
     integrity="sha256-7OUNnq6tbF4510dkZHCRccvQfRlV3lPpBTJEljINxao=" crossorigin="anonymous"></script>
   <script src="./libs/ol.js"></script>
   <script src="./main.js"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+
+
+
+  <!-- <script>
+    $( document ).ready(function() {
+      $('#location').select2({
+        minimumInputLength: 2,
+          tags: [],
+        ajax: {
+          
+          url: 'http://localhost:8080/places',
+          delay: 250,
+          dataType: 'json',
+          data: function (params) {
+                var query = {
+                    //trim the extra whitespace
+                    search: params.term.replace(/\s+/g, " ").trim(),
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+
+          processResults: function (data) {
+            // Transforms the top-level key of the response object from 'items' to 'results'
+            return {
+              results: data.results
+            };
+          }
+        }
+      });
+    })
+  </script> -->
+<!-- 
+  <script>
+    $(document).ready(function(){
+    $('#location').select2({
+        minimumInputLength: 2,
+        tags: [],
+        ajax: {
+            url: 'http://localhost:8080/places',
+            dataType: 'json',
+            data: function (params) {
+                var query = {
+                    //trim the extra whitespace
+                    search: params.term.replace(/\s+/g, " ").trim(),
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.results
+                };
+            }
+        }
+    });
+});
+  </script> -->
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+      new autoComplete({
+        selector: "#location",
+        data: {                              // Data src [Array, Function, Async] | (REQUIRED)
+          src: async () => {
+            // User search query
+            const query = document.querySelector("#location").value;
+            // Fetch External Data Source
+            const source = await fetch(`http://localhost:8080/places?search=${query}`);
+            const data = await source.json();
+            // Return Fetched data
+            return data.results;
+          },
+          key: ["id"],
+          cache: false
+          },
+        })
+    })
+
+  </script>
 
 
 </body>

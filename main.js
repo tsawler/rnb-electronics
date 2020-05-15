@@ -141,6 +141,9 @@ function performSearch() {
                             ${item.address}
                             <br>
                             ${item.products}
+
+                            <br>
+                            <a class="btn btn-success btn-sm" href="javascript:" onclick="getDirections('${item.lat}', '${item.lng}')">Get Directions</a>
                             </div>
                             <hr>
                         `;
@@ -261,4 +264,31 @@ function addMapMarker(lat, lng) {
 
     map.addLayer(vectorLayer);
 
+}
+
+async function getDirections(lat, lon) {
+    const { value: formValues } = await Swal.fire({
+        title: '',
+        html: `
+        <form action="https://maps.google.com/maps" method="get" id="get-directions" target="_blank"> 
+        <div class="form-group">
+          <label for="start">Enter starting address</label>
+          <input type="text" class="form-control" id="starting-point" name="saddr">
+        </div>
+        <input type="hidden" name="daddr" value="${lat},${lon}" />
+      </form>
+        `,
+        focusConfirm: false,
+        showConfirmButton: true,
+        showCancelButton: true,
+        preConfirm: () => {
+            return [
+              document.getElementById('starting-point').value,
+            ]
+          }
+      })
+
+      if (formValues) {
+        document.getElementById("get-directions").submit();
+      }
 }
