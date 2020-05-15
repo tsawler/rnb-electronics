@@ -12,9 +12,9 @@ const baseLayer = new ol.layer.Tile({
 
 document.addEventListener("DOMContentLoaded", function (event) {
     init();
-    document.getElementById("location").addEventListener('change', function () {
-        performSearch();
-    })
+    // document.getElementById("location").addEventListener('change', function () {
+    //     performSearch();
+    // })
 })
 
 closer.onclick = function () {
